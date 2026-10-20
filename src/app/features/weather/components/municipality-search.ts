@@ -8,7 +8,7 @@ import { Municipality } from '../models/municipality';
   selector: 'app-municipality-search',
   imports: [MatAutocompleteModule, MatFormFieldModule, MatInputModule],
   template: `
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <mat-label>Municipio</mat-label>
       <input
         matInput
@@ -26,6 +26,15 @@ import { Municipality } from '../models/municipality';
         }
       </mat-autocomplete>
     </mat-form-field>
+  `,
+  styles: `
+    :host {
+      display: block;
+    }
+
+    mat-form-field {
+      width: 100%;
+    }
   `,
 })
 export class MunicipalitySearch {

@@ -14,6 +14,10 @@ export interface Forecast {
   sky: SkyState;
 }
 
+export function averageCelsius({ averageTemperature, unit }: Forecast): number {
+  return unit === 'G_FAH' ? ((averageTemperature - 32) * 5) / 9 : averageTemperature;
+}
+
 // TODO: AEMET publishes the real sky state (`estadoCielo`). Once weather-api exposes it,
 // map it in ForecastApi and remove this estimate based on the chance of rain.
 export function estimateSkyState(precipitation: PrecipitationProbability[]): SkyState {

@@ -1,0 +1,35 @@
+<main [class.has-result]="municipality()">
+  <header>
+    <h1>¿Qué tiempo hará mañana?</h1>
+    <div class="fields">
+      <app-municipality-search
+        [options]="municipalities.value()"
+        (queryChange)="query.set($event)"
+        [(selected)]="municipality"
+      />
+      <app-unit-select [(unit)]="unit" />
+    </div>
+  </header>
+
+  @if (municipality()) {
+    <section class="result" aria-live="polite" [attr.aria-busy]="forecast.isLoading()">
+      @for (card of cards(); track card.municipality.code) {
+        <app-forecast-card
+          [class.stale]="forecast.isLoading()"
+          [municipality]="card.municipality.name"
+          [date]="tomorrow()"
+          [forecast]="card.forecast"
+        />
+      } @empty {
+        @if (errorMessage(); as message) {
+          <div class="message" role="alert">
+            <p>{{ message }}</p>
+            <button matButton="outlined" (click)="forecast.reload()">Reintentar</button>
+          </div>
+        } @else {
+          <mat-progress-bar mode="indeterminate" aria-label="Cargando la predicción" />
+        }
+      }
+    </section>
+  }
+</main>

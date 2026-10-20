@@ -1,9 +1,17 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+
+// Registered so the browser can interpolate them: the page colour glides between temperatures
+@property --temp-hue {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 250;
+}
+
+@property --temp-chroma {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
 
 html {
   height: 100%;
@@ -13,27 +21,29 @@ html {
         primary: mat.$azure-palette,
         tertiary: mat.$blue-palette,
       ),
-      typography: Roboto,
+      typography: 'Bricolage Grotesque',
       density: 0,
     )
   );
 }
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
 
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
+  color-scheme: light;
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
+  font: var(--mat-sys-body-large);
   margin: 0;
   height: 100%;
 }
-/* You can add global styles to this file, and also import other style files */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

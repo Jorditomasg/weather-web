@@ -7,7 +7,7 @@ import { TemperatureUnit } from '../models/forecast';
   selector: 'app-unit-select',
   imports: [MatFormFieldModule, MatSelectModule],
   template: `
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <mat-label>Unidad</mat-label>
       <mat-select [value]="unit()" (valueChange)="unit.set($event)">
         <mat-option [value]="null">—</mat-option>
@@ -15,6 +15,15 @@ import { TemperatureUnit } from '../models/forecast';
         <mat-option value="G_FAH">°F</mat-option>
       </mat-select>
     </mat-form-field>
+  `,
+  styles: `
+    :host {
+      display: block;
+    }
+
+    mat-form-field {
+      width: 100%;
+    }
   `,
 })
 export class UnitSelect {
