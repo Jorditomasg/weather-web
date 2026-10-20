@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', loadChildren: () => import('./features/weather/weather.routes') },
+  { path: '', loadChildren: () => import('@features/weather/weather.routes') },
 ];
