@@ -85,8 +85,13 @@ export class WeatherPage {
   protected readonly errorMessage = computed(() => {
     const error = this.forecast.error();
     if (!error) return null;
-    return error instanceof HttpErrorResponse && error.status === 404
-      ? `AEMET todavía no ha publicado la predicción de mañana para ${this.municipality()?.name}.`
-      : 'AEMET no responde ahora mismo. Vuelve a intentarlo en unos segundos.';
+    const status = error instanceof HttpErrorResponse ? error.status : undefined;
+    if (status === 404) {
+      return `AEMET todavía no ha publicado la predicción de mañana para ${this.municipality()?.name}.`;
+    }
+    if (status === 503) {
+      return 'AEMET limita las consultas por minuto. Vuelve a intentarlo en un minuto.';
+    }
+    return 'AEMET no responde ahora mismo. Vuelve a intentarlo en unos segundos.';
   });
 }
