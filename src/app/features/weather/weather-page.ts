@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, computed, debounced, inject, linkedSignal, signal } from '@angular/core';
+import { Component, computed, debounced, effect, inject, linkedSignal, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ForecastCard } from './components/forecast-card';
@@ -7,6 +7,7 @@ import { MunicipalitySearch } from './components/municipality-search';
 import { temperatureTone } from './components/temperature-tone';
 import { UnitSelect } from './components/unit-select';
 import { ForecastApi } from './data-access/forecast-api';
+import { LastSearchStore } from './data-access/last-search-store';
 import { MunicipalityApi } from './data-access/municipality-api';
 import { averageCelsius, Forecast, TemperatureUnit } from './models/forecast';
 import { Municipality } from './models/municipality';
@@ -32,8 +33,12 @@ interface ShownForecast {
   styleUrl: './weather-page.scss',
 })
 export class WeatherPage {
-  protected readonly municipality = signal<Municipality | null>(null);
-  protected readonly unit = signal<TemperatureUnit | null>(null);
+  private readonly lastSearch = inject(LastSearchStore);
+  private readonly saved = this.lastSearch.load();
+
+  // Starting from the last search loads its forecast straight away
+  protected readonly municipality = signal<Municipality | null>(this.saved?.municipality ?? null);
+  protected readonly unit = signal<TemperatureUnit | null>(this.saved?.unit ?? null);
   protected readonly query = signal('');
 
   private readonly term = debounced(() => this.query().trim(), DEBOUNCE_MS);
@@ -94,4 +99,11 @@ export class WeatherPage {
     }
     return 'AEMET no responde ahora mismo. Vuelve a intentarlo en unos segundos.';
   });
+
+  constructor() {
+    effect(() => {
+      const municipality = this.municipality();
+      if (municipality) this.lastSearch.save({ municipality, unit: this.unit() });
+    });
+  }
 }
